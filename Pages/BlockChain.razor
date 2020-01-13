@@ -1,0 +1,87 @@
+﻿@page "/blockchain"
+@using Blockchain.Data
+@inject ShaService ShaService
+
+
+@foreach (var _block in _blocks)
+{
+    <div class="card @((_block.IsGood() ? "bg-success":"bg-danger")) mb-1" style="width: 30rem; ">
+
+        <div class="card-body">
+            <div class="container">
+
+                <div class="row mb-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Block #:</span>
+                        </div>
+                        <input type="number" class="form-control col" @bind-value="_block.BlockNum" @bind-value:event="oninput" />
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Nonce:</span>
+                        </div>
+                        <input type="number" class="form-control col" @bind-value="_block.Nonce" @bind-value:event="oninput" />
+                    </div>
+                </div>
+
+
+                <div class="row mb-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Data:</span>
+                        </div>
+                        <textarea type="text" rows="10" class="form-control col" @bind-value="_block.Data" @bind-value:event="oninput" />
+                    </div>
+
+                </div>
+
+                <div class="row mb-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">PrevHash:</span>
+                        </div>
+                        <input type="text" class="form-control col" @bind-value="_block.PrevHash" />
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Sha256:</span>
+                        </div>
+                        <input type="text" class="form-control col" @bind-value="_block.Hash" />
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary form-control" @onclick="_block.Mine">Mine</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+                <button class="btn btn-primary mb-1" @onclick="AddBlock">Add block</button>
+
+@functions
+{
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _blocks = new List<MainingBlock> { new MainingBlock(null) { BlockNum = 1 } };
+    }
+
+    private List<MainingBlock> _blocks { get; set; }
+
+    private void AddBlock()
+    {
+        _blocks.Add(new MainingBlock(_blocks.LastOrDefault()) { BlockNum = _blocks.Count + 1});
+    }
+
+}

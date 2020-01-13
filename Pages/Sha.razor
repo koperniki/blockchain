@@ -1,0 +1,46 @@
+﻿@page "/sha"
+@using Blockchain.Data
+@inject ShaService ShaService
+
+<div class="container">
+
+    <div class="row mb-1">
+        
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Data   :</span>
+            </div>
+            <textarea type="text" rows="10"  class="form-control col" @bind-value="DataToHash" @bind-value:event="oninput"/>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Sha256:</span>
+            </div>
+            <input type="text"  class="form-control col" @bind-value="Hash" />
+        </div>
+    </div>
+ </div>
+@functions
+{
+    private static Random _rnd = new Random();
+
+    private string _data;
+
+    private string DataToHash
+    {
+        get => _data;
+        set
+        {
+            _data = value;
+            Hash = ShaService.GetSha(value);
+        }
+    }
+
+    private string Hash { get; set; }
+
+
+}

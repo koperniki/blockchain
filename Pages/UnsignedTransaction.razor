@@ -1,0 +1,268 @@
+﻿@page "/unsignedtransaction"
+@using Blockchain.Data
+@inject ShaService ShaService
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">User:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet1.ReadName" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start Coins:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet1.InitialCoin" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End Coins:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_walletTotal1" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">User:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet2.ReadName" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start Coins:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet2.InitialCoin" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End Coins:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_walletTotal2" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">User:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet3.ReadName" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start Coins::</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_wallet3.InitialCoin" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End Coins:</span>
+                                </div>
+                                <input type="text" readonly="true" class="form-control col" @bind-value="_walletTotal3" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2" >
+        <div class="input-group col">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Кто:</span>
+            </div>
+            <select class="form-control" @bind="_from">
+
+                <option value="@_wallet1.PublicKey">@_wallet1.ReadName</option>
+                <option value="@_wallet2.PublicKey">@_wallet2.ReadName</option>
+                <option value="@_wallet3.PublicKey">@_wallet3.ReadName</option>
+
+            </select>
+        </div>
+
+        <div class="input-group col">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Кому:</span>
+            </div>
+            <select class="form-control" @bind="_to">
+
+                <option value="@_wallet1.PublicKey">@_wallet1.ReadName</option>
+                <option value="@_wallet2.PublicKey">@_wallet2.ReadName</option>
+                <option value="@_wallet3.PublicKey">@_wallet3.ReadName</option>
+
+            </select>
+        </div>
+
+
+        <div class="input-group col">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Coins:</span>
+            </div>
+            <input type="number" class="form-control" @bind-value="_coins" @bind-value:event="oninput" />
+        </div>
+        
+
+
+        <div class="input-group col">
+            <button class="btn btn-primary form-control" @onclick="Trx">Утвердить</button>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        @foreach (var _trx in _transactions)
+        {
+            <div class="row mt-2">
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Кто:</span>
+                    </div>
+                    <select class="form-control" disabled="true" @bind="_trx.WalletFrom">
+
+                        <option value="@_wallet1.PublicKey">@_wallet1.ReadName</option>
+                        <option value="@_wallet2.PublicKey">@_wallet2.ReadName</option>
+                        <option value="@_wallet3.PublicKey">@_wallet3.ReadName</option>
+
+                    </select>
+                </div>
+
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Кому:</span>
+                    </div>
+                    <select class="form-control" disabled="true" @bind="_trx.WalletTo">
+
+                        <option value="@_wallet1.PublicKey">@_wallet1.ReadName</option>
+                        <option value="@_wallet2.PublicKey">@_wallet2.ReadName</option>
+                        <option value="@_wallet3.PublicKey">@_wallet3.ReadName</option>
+
+                    </select>
+                </div>
+
+
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Coins:</span>
+                    </div>
+                    <input type="number" readonly="true"  class="form-control" @bind-value="_trx.Coins" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+        }
+
+
+    </div>
+
+</div>
+
+
+
+
+@functions
+{
+
+    protected override void OnInitialized()
+    {
+        _wallet1 = new Wallet();
+        _wallet1.ReadName = "Богатый человек.";
+        _wallet1.InitialCoin = 100;
+
+        _from = _to = _wallet1.PublicKey;
+
+        _wallet2 = new Wallet();
+        _wallet2.ReadName = "Человек среднего достатка.";
+        _wallet2.InitialCoin = 55;
+
+
+        _wallet3 = new Wallet();
+        _wallet3.ReadName = "Бедный человек.";
+        _wallet3.InitialCoin = 10;
+
+        _transactions = new List<Data.Transaction>();
+
+        base.OnInitialized();
+
+    }
+
+    private Wallet _wallet1 { get; set; }
+    private Wallet _wallet2 { get; set; }
+    private Wallet _wallet3 { get; set; }
+
+
+    private List<Data.Transaction> _transactions;
+
+    private string _from;
+    private string _to;
+
+    private int _coins;
+
+
+    private int _walletTotal1;
+    private int _walletTotal2;
+    private int _walletTotal3;
+
+
+    void Trx()
+    {
+        _transactions.Add(new Data.Transaction()
+        {
+            Coins = _coins,
+            WalletFrom = _from,
+            WalletTo = _to
+        });
+
+
+        _walletTotal1 = _wallet1.InitialCoin + _transactions.Where(t => t.WalletTo == _wallet1.PublicKey).Sum(t => t.Coins) - _transactions.Where(t => t.WalletFrom == _wallet1.PublicKey).Sum(t => t.Coins);
+        _walletTotal2 = _wallet2.InitialCoin + _transactions.Where(t => t.WalletTo == _wallet2.PublicKey).Sum(t => t.Coins) - _transactions.Where(t => t.WalletFrom == _wallet2.PublicKey).Sum(t => t.Coins);
+        _walletTotal3 = _wallet3.InitialCoin + _transactions.Where(t => t.WalletTo == _wallet3.PublicKey).Sum(t => t.Coins) - _transactions.Where(t => t.WalletFrom == _wallet3.PublicKey).Sum(t => t.Coins);
+
+    }
+
+}

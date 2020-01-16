@@ -27,7 +27,6 @@ namespace Blockchain
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ShaService>();
         }
 

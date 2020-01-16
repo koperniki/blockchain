@@ -1,0 +1,205 @@
+﻿@page "/keys"
+@using Blockchain.Data
+@inject ShaService ShaService
+
+
+
+
+<div class="card" style="width: 50rem; ">
+
+    <div class="card-body">
+        <div class="container">
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">User:</span>
+                    </div>
+                    <input type="text" readonly="true" class="form-control col" @bind-value="_wallet.ReadName" />
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Public key:</span>
+                    </div>
+                    <input type="text" readonly="true" class="form-control col" @bind-value="_wallet.PublicKey" />
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Private key:</span>
+                    </div>
+                    <input type="text" readonly="true" class="form-control col" @bind-value="_wallet.PrivateKey" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="card" style="width: 50rem; ">
+
+    <div class="card-body">
+        <div class="container">
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Message:</span>
+                    </div>
+                    <input type="text"  class="form-control col" @bind-value="Message" @bind-value:event="oninput"/>
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Private key:</span>
+                    </div>
+                    <input type="text"  class="form-control col" @bind-value="PrivateKey" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Signature:</span>
+                    </div>
+                    <textarea type="text" readonly="true" rows="3" class="form-control col" @bind-value="_sign" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card @((_check ? "bg-success":"bg-danger")) " style="width: 50rem; ">
+
+    <div class="card-body">
+        <div class="container">
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Message:</span>
+                    </div>
+                    <input type="text" class="form-control col" @bind-value="MessageCheck" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Public key:</span>
+                    </div>
+                    <input type="text" readonly="true" class="form-control col" @bind-value="_wallet.PublicKey" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Signature:</span>
+                    </div>
+                    <textarea type="text" rows="3" class="form-control col" @bind-value="SignCheck" @bind-value:event="oninput" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<p></p>
+<span><b>ECDSA (Elliptic Curve Digital Signature Algorithm)</b> алгоритм с открытым ключом для создания цифровой подписи в группе точек эллиптической кривой.</span>
+<p></p>
+<p>
+    Для подписывания сообщений необходима пара ключей — открытый и закрытый.
+    При этом закрытый ключ должен быть известен только тому, кто подписывает сообщения, а открытый — любому желающему проверить подлинность сообщения. Также общедоступными являются параметры самого алгоритма.
+</p>
+
+
+
+
+
+
+
+@functions
+{
+
+    protected override void OnInitialized()
+    {
+        _wallet = new Wallet();
+        _wallet.ReadName = "Богатый человек.";
+
+        base.OnInitialized();
+
+    }
+
+    private Wallet _wallet { get; set; }
+
+    private string _message { get; set; }
+    private string _messageCheck { get; set; }
+
+    private string _sign { get; set; }
+
+    private string _signCheck { get; set; }
+
+    private string _privateKey;
+
+    private bool _check { get; set; }
+
+    private string PrivateKey
+
+    {
+        get => _privateKey;
+        set
+        {
+
+            _privateKey = value;
+            _sign = Wallet.SignData(_message, value);
+        }
+    }
+
+    private string SignCheck
+
+    {
+        get => _signCheck;
+        set
+        {
+
+            _signCheck = value;
+            _check = Wallet.Verify(_messageCheck, value, _wallet.PublicKey);
+        }
+    }
+
+
+    private string Message
+    {
+        get => _message;
+        set
+        {
+
+            _message = value;
+            _sign = Wallet.SignData(value, _privateKey);
+        }
+    }
+
+
+    private string MessageCheck
+    {
+        get => _messageCheck;
+        set
+        {
+
+            _messageCheck = value;
+            _check = Wallet.Verify(value, _signCheck, _wallet.PublicKey);
+        }
+    }
+}

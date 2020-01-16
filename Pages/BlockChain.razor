@@ -5,7 +5,7 @@
 
 @foreach (var _block in _blocks)
 {
-    <div class="card @((_block.IsGood() ? "bg-success":"bg-danger")) mb-1" style="width: 30rem; ">
+    <div class="card @((_block.IsGood() ? "bg-success":"bg-danger")) mb-1" style="width: 40rem; ">
 
         <div class="card-body">
             <div class="container">
@@ -34,7 +34,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Data:</span>
                         </div>
-                        <textarea type="text" rows="10" class="form-control col" @bind-value="_block.Data" @bind-value:event="oninput" />
+                        <textarea type="text" rows="3" class="form-control col" @bind-value="_block.Data" @bind-value:event="oninput" />
                     </div>
 
                 </div>
